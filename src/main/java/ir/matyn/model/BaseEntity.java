@@ -1,7 +1,6 @@
 package ir.matyn.model;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.GeneratedValue;
@@ -14,13 +13,13 @@ import javax.persistence.MappedSuperclass;
 public class BaseEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 }

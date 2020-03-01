@@ -2,10 +2,9 @@ package ir.matyn.dto;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-
 @Data
-public class ContactFormDto {
+public class ContactFormDtoOut {
+    private long id;
 
     private String name;
 
@@ -14,6 +13,14 @@ public class ContactFormDto {
     private String subject;
 
     private String message;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

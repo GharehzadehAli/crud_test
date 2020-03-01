@@ -1,20 +1,13 @@
-import ir.matyn.dto.ContactFormDto;
-import ir.matyn.model.ContactForm;
+import ir.matyn.dto.ContactFormDtoOut;
+import ir.matyn.model.ContactFormEntity;
 import ir.matyn.repository.ContactFormDao;
-import ir.matyn.service.ContactFormServiceImpl;
+import ir.matyn.service.ContactFormService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -22,67 +15,64 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-//@RunWith(Parameterized.class)
 public class ServiceTest {
 
-    List<ContactForm> list;
-    ContactForm contactForm1;
-    ContactForm contactForm2;
-    ContactForm contactForm3;
-    ContactForm contactForm4;
+    List<ContactFormEntity> list;
+    ContactFormEntity contactFormEntity1;
+    ContactFormEntity contactFormEntity2;
+    ContactFormEntity contactFormEntity3;
+    ContactFormEntity contactFormEntity4;
     @Mock
     private ContactFormDao repository;
     @InjectMocks
-    private ContactFormServiceImpl service;
-    ModelMapper modelMapper = new ModelMapper();
+    private ContactFormService service;
 
-//    public ServiceTest() {
-//    }
 
     @Before()
     public void init() {
-//    public ServiceTest() {
+
         MockitoAnnotations.initMocks(this);
-        contactForm1 = new ContactForm("name1", "email1", "subject1", "message1");
-        contactForm2 = new ContactForm("name2", "email2", "subject2", "message2");
-        contactForm3 = new ContactForm("name3", "email3", "subject3", "message3");
-        contactForm4 = new ContactForm("name4", "email4", "subject4", "message4");
+        contactFormEntity1 = new ContactFormEntity(1L, "name1", "email1", "subject1", "message1");
+        contactFormEntity2 = new ContactFormEntity(2L, "name2", "email2", "subject2", "message2");
+        contactFormEntity3 = new ContactFormEntity(3L, "name3", "email3", "subject3", "message3");
+        contactFormEntity4 = new ContactFormEntity(4L, "name4", "email4", "subject4", "message4");
         list = new ArrayList<>();
-        list.add(contactForm1);
-        list.add(contactForm2);
-        list.add(contactForm3);
-        list.add(contactForm4);
+        list.add(contactFormEntity1);
+        list.add(contactFormEntity2);
+        list.add(contactFormEntity3);
+        list.add(contactFormEntity4);
     }
 
     @Test
     public void findAll_Test() {
 
         when(repository.findAll()).thenReturn(list);
-        List<ContactFormDto> contactFormDtoList = service.findAll();
+        List<ContactFormDtoOut> contactFormDtoOutList = service.findAll();
         int i = 0;
-        for (ContactForm element : repository.findAll()) {
-            assertEquals(element.getEmail(), contactFormDtoList.get(i).getEmail());
-            assertEquals(element.getName(), contactFormDtoList.get(i).getName());
-            assertEquals(element.getMessage(), contactFormDtoList.get(i).getMessage());
-            assertEquals(element.getSubject(), contactFormDtoList.get(i).getSubject());
+        for (ContactFormEntity element : repository.findAll()) {
+            assertEquals(element.getId(), contactFormDtoOutList.get(i).getId());
+            assertEquals(element.getEmail(), contactFormDtoOutList.get(i).getEmail());
+            assertEquals(element.getName(), contactFormDtoOutList.get(i).getName());
+            assertEquals(element.getMessage(), contactFormDtoOutList.get(i).getMessage());
+            assertEquals(element.getSubject(), contactFormDtoOutList.get(i).getSubject());
             i++;
         }
         // Ask if verify is needed here
     }
 
-    @ParameterizedTest
-    @ValueSource(longs = {1, 2, 3, 4})
-    public void findById_Test(Long id) {
-        init();
-        when(repository.findById(id)).thenReturn(Optional.of(list.get(Math.toIntExact(id))));
-        ContactFormDto contactFormDto = service.findById(id);
-        assertEquals(list.get(Math.toIntExact(id)).getEmail(), contactFormDto.getEmail());
-        assertEquals(list.get(Math.toIntExact(id)).getName(), contactFormDto.getName());
-        assertEquals(list.get(Math.toIntExact(id)).getMessage(), contactFormDto.getMessage());
-        assertEquals(list.get(Math.toIntExact(id)).getSubject(), contactFormDto.getSubject());
+    @Test
+    public void findById_Test() {
+        for (long id = 0; id < 4; id++) {
+            when(repository.findById(id + 1)).thenReturn(Optional.of(list.get(Math.toIntExact(id))));
+            ContactFormDtoOut contactFormDtoOut = service.findById(id + 1);
+            assertEquals(list.get(Math.toIntExact(id)).getEmail(), contactFormDtoOut.getEmail());
+            assertEquals(list.get(Math.toIntExact(id)).getName(), contactFormDtoOut.getName());
+            assertEquals(list.get(Math.toIntExact(id)).getMessage(), contactFormDtoOut.getMessage());
+            assertEquals(list.get(Math.toIntExact(id)).getSubject(), contactFormDtoOut.getSubject());
+        }
     }
 }
 //    @Test

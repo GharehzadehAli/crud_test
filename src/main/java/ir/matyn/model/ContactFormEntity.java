@@ -2,34 +2,52 @@ package ir.matyn.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Data
 @Entity
 @Table(name = "contactForm")
-public class ContactForm extends BaseEntity{
+public class ContactFormEntity extends BaseEntity {
 
-
+    @NotBlank(message = "Please Enter A Name")
+    @Size(min = 3, max = 20)
     @Column(name = "name")
     private String name;
+    @NotBlank(message = "Please Enter An Email")
+    @Email
     @Column(name = "email")
     private String email;
+    @NotBlank(message = "Please Enter A Subject")
+    @Size(min = 3, max = 20)
     @Column(name = "subject")
     private String subject;
+    @NotBlank(message = "Please Enter A Subject")
+    @Size(min = 3, max = 50)
     @Column(name = "message")
     private String message;
 
-    public ContactForm() {
+    public ContactFormEntity() {
     }
 
-    public ContactForm(String name, String email, String subject, String message) {
-        this.name=name;
-        this.email=email;
-        this.subject=subject;
-        this.message=message;
+    public ContactFormEntity(long id, String name, String email, String subject, String message) {
+        super.setId(id);
+        this.name = name;
+        this.email = email;
+        this.subject = subject;
+        this.message = message;
     }
 
-
-
+    public ContactFormEntity(String name, String email, String subject, String message) {
+        this.name = name;
+        this.email = email;
+        this.subject = subject;
+        this.message = message;
+    }
 
 
     public String getSubject() {
@@ -51,7 +69,6 @@ public class ContactForm extends BaseEntity{
     public String getName() {
         return name;
     }
-
 
 
     public void setName(String name) {

@@ -1,11 +1,7 @@
 package ir.matyn.repository;
 
-import ir.matyn.model.ContactForm;
-import org.springframework.data.jpa.repository.JpaRepository;
+import ir.matyn.model.ContactFormEntity;
 
-import java.util.List;
-
-public interface ContactFormDao extends GenericDao<ContactForm> {
-
+public interface ContactFormDao extends GenericDao<ContactFormEntity> {
 
 }

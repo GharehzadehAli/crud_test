@@ -1,8 +1,8 @@
 package ir.matyn.controller;
 
-import ir.matyn.dto.ContactFormDto;
-import ir.matyn.model.ContactForm;
-import ir.matyn.service.ContactFormServiceImpl;
+import ir.matyn.dto.ContactFormDtoIn;
+import ir.matyn.dto.ContactFormDtoOut;
+import ir.matyn.service.ContactFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,42 +12,43 @@ import java.util.List;
 @RequestMapping("/crud")
 public class ContactFormController {
 
-    private final ContactFormServiceImpl contactFormService;
+    private final ContactFormService contactFormService;
+
     @Autowired
-    public ContactFormController(ContactFormServiceImpl contactFormService) {
+    public ContactFormController(ContactFormService contactFormService) {
         this.contactFormService = contactFormService;
     }
 
     @ResponseBody
     @GetMapping(value = "/read", produces = "application/json")
-    public List<ContactFormDto> getForms() {
-        List<ContactFormDto> contactFormDtoList = contactFormService.findAll();
-        return contactFormDtoList;
+    public List<ContactFormDtoOut> getForms() {
+        return contactFormService.findAll();
+
     }
 
     @DeleteMapping("/deleteAll")
-    void delete(ContactForm contactForm) {
+    public void delete() {
         contactFormService.deleteAll();
 
     }
-
+//when I made it public it turned in to yellow. why?
     @DeleteMapping("/deleteById/{id}")
-    void delete(@PathVariable("id") long id) {
+    public void delete(@PathVariable("id") long id) {
         contactFormService.deleteById(id);
 
     }
 
     @PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
-    public ContactFormDto add(ContactFormDto contactFormDto) {
-        contactFormService.save(contactFormDto);
-        return contactFormDto;
+    public ContactFormDtoIn add(ContactFormDtoIn contactFormDtoIn) {
+        contactFormService.save(contactFormDtoIn);
+        return contactFormDtoIn;
 
     }
 
     @ResponseBody
     @PutMapping(value = "/update", consumes = "application/json", produces = "application/json")
-    public void updateById(@PathVariable("id") long id, @RequestBody ContactFormDto contactFormDto) {
-        contactFormService.updateById(id,contactFormDto);
+    public void updateById(@PathVariable("id") long id, @RequestBody ContactFormDtoIn contactFormDtoIn) {
+        contactFormService.updateById(id, contactFormDtoIn);
 
     }
 }
