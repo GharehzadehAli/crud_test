@@ -1,4 +1,4 @@
-package ir.matyn.dto;
+package ir.matyn.model.dto;
 
 import lombok.Data;
 

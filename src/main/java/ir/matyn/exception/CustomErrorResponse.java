@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class CustomErrorResponse {
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)//I gotta search this.
     private LocalDateTime timestamp;
     private int status;
     private String error;

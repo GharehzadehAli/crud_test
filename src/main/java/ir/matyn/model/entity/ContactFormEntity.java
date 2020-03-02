@@ -1,19 +1,20 @@
-package ir.matyn.model;
+package ir.matyn.model.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
 @Entity
-@Table(name = "contactForm")
-public class ContactFormEntity extends BaseEntity {
-
+@Table(name = "contact_form")
+public class ContactFormEntity {
+    @Id
+    @GeneratedValue
+    @Column(name = "contact_form_id")
+    private long id;
     @NotBlank(message = "Please Enter A Name")
     @Size(min = 3, max = 20)
     @Column(name = "name", nullable = false)
@@ -35,7 +36,7 @@ public class ContactFormEntity extends BaseEntity {
     }
 
     public ContactFormEntity(long id, String name, String email, String subject, String message) {
-        super.setId(id);
+        this.setId(id);
         this.name = name;
         this.email = email;
         this.subject = subject;
@@ -49,49 +50,5 @@ public class ContactFormEntity extends BaseEntity {
         this.message = message;
     }
 
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "ContactForm{" +
-                "id=" + this.getId() +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", subject='" + subject + '\'' +
-                ", message='" + message + '\'' +
-                '}';
-    }
 
 }

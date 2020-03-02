@@ -1,7 +1,7 @@
 package ir.matyn.controller;
 
-import ir.matyn.dto.ContactFormDtoIn;
-import ir.matyn.dto.ContactFormDtoOut;
+import ir.matyn.model.dto.ContactFormDtoIn;
+import ir.matyn.model.dto.ContactFormDtoOut;
 import ir.matyn.service.ContactFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,16 +49,15 @@ public class ContactFormController {
     }
 
     @PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
-    public ContactFormDtoIn add(@Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
-        contactFormService.save(contactFormDtoIn);
-        return contactFormDtoIn;
+    public ContactFormDtoOut add(@Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
+        return contactFormService.save(contactFormDtoIn);
 
     }
 
     //how does this validate Id?
     @PutMapping(value = "/update/{id}", consumes = "application/json", produces = "application/json")
-    public void updateById(@Valid @PathVariable("id") long id, @Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
-        contactFormService.updateById(id, contactFormDtoIn);
+    public ContactFormDtoOut updateById(@Valid @PathVariable("id") long id, @Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
+        return contactFormService.updateById(id, contactFormDtoIn);
 
     }
 }

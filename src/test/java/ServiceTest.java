@@ -1,5 +1,5 @@
-import ir.matyn.dto.ContactFormDtoOut;
-import ir.matyn.model.ContactFormEntity;
+import ir.matyn.model.dto.ContactFormDtoOut;
+import ir.matyn.model.entity.ContactFormEntity;
 import ir.matyn.repository.IContactFormDao;
 import ir.matyn.service.ContactFormService;
 import org.junit.Before;
