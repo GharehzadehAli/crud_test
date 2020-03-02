@@ -1,6 +1,6 @@
 import ir.matyn.dto.ContactFormDtoOut;
 import ir.matyn.model.ContactFormEntity;
-import ir.matyn.repository.ContactFormDao;
+import ir.matyn.repository.IContactFormDao;
 import ir.matyn.service.ContactFormService;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class ServiceTest {
     ContactFormEntity contactFormEntity3;
     ContactFormEntity contactFormEntity4;
     @Mock
-    private ContactFormDao repository;
+    private IContactFormDao repository;
     @InjectMocks
     private ContactFormService service;
 

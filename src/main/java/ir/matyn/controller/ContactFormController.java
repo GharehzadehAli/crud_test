@@ -6,6 +6,7 @@ import ir.matyn.service.ContactFormService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,18 +21,27 @@ public class ContactFormController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/read", produces = "application/json")
+    @GetMapping(value = "/readAll", produces = "application/json")
     public List<ContactFormDtoOut> getForms() {
         return contactFormService.findAll();
 
     }
 
+    @ResponseBody
+    @GetMapping(value = "/readById/{id}", produces = "application/json")
+    public ContactFormDtoOut getFormById(@Valid @PathVariable("id") Long id) {
+        return contactFormService.findById(id);
+
+    }
+
+    //do we need to return anything?
     @DeleteMapping("/deleteAll")
     public void delete() {
         contactFormService.deleteAll();
 
     }
-//when I made it public it turned in to yellow. why?
+
+    //when I made it public it turned in to yellow. why?
     @DeleteMapping("/deleteById/{id}")
     public void delete(@PathVariable("id") long id) {
         contactFormService.deleteById(id);
@@ -39,15 +49,15 @@ public class ContactFormController {
     }
 
     @PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
-    public ContactFormDtoIn add(ContactFormDtoIn contactFormDtoIn) {
+    public ContactFormDtoIn add(@Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
         contactFormService.save(contactFormDtoIn);
         return contactFormDtoIn;
 
     }
 
-    @ResponseBody
-    @PutMapping(value = "/update", consumes = "application/json", produces = "application/json")
-    public void updateById(@PathVariable("id") long id, @RequestBody ContactFormDtoIn contactFormDtoIn) {
+    //how does this validate Id?
+    @PutMapping(value = "/update/{id}", consumes = "application/json", produces = "application/json")
+    public void updateById(@Valid @PathVariable("id") long id, @Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
         contactFormService.updateById(id, contactFormDtoIn);
 
     }

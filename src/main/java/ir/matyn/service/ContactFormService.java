@@ -2,10 +2,13 @@ package ir.matyn.service;
 
 import ir.matyn.dto.ContactFormDtoIn;
 import ir.matyn.dto.ContactFormDtoOut;
+import ir.matyn.exception.ContactFormNotFoundException;
+import ir.matyn.exception.ContactFormsNotFoundException;
 import ir.matyn.model.ContactFormEntity;
-import ir.matyn.repository.ContactFormDao;
+import ir.matyn.repository.IContactFormDao;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,11 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class ContactFormService implements IContactFormService {
 
+    private final IContactFormDao contactFormDao;
     private ModelMapper modelMapper = new ModelMapper();
-    private final ContactFormDao contactFormDao;
 
     @Autowired
-    public ContactFormService(ContactFormDao contactFormDao) {
+    public ContactFormService(IContactFormDao contactFormDao) {
         this.contactFormDao = contactFormDao;
 
     }
@@ -46,27 +49,33 @@ public class ContactFormService implements IContactFormService {
 
     @Override
     public void deleteById(long id) {
+        try {
+            contactFormDao.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ContactFormNotFoundException(id);
+        }
 
-        contactFormDao.deleteById(id);
     }
 
     @Override
     public void deleteAll() {
-        contactFormDao.deleteAll();
+        try {
+            contactFormDao.deleteAll();
+        } catch (EmptyResultDataAccessException e) {
+            throw new ContactFormsNotFoundException();
+        }
     }
 
     @Override
     public ContactFormDtoOut findById(long id) {
         Optional<ContactFormEntity> contactForm = contactFormDao.findById(id);
-        if (contactForm.isPresent()) {
-            return modelMapper.map(contactForm.get(), ContactFormDtoOut.class);
-
-        }
-        return null;
+        return contactForm.map(contactFormEntity -> modelMapper
+                .map(contactFormEntity, ContactFormDtoOut.class))
+                .orElseThrow(() -> new ContactFormNotFoundException(id));
     }
 
     @Override
-    public void updateById(Long id, ContactFormDtoIn contactFormDtoIn) {
+    public ContactFormDtoOut updateById(Long id, ContactFormDtoIn contactFormDtoIn) {
         Optional<ContactFormEntity> optContactForm = contactFormDao.findById(id);
         if (optContactForm.isPresent()) {
             ContactFormEntity contactFormEntity = optContactForm.get();
@@ -74,9 +83,10 @@ public class ContactFormService implements IContactFormService {
             contactFormEntity.setName(contactFormDtoIn.getName());
             contactFormEntity.setMessage(contactFormDtoIn.getMessage());
             contactFormEntity.setSubject(contactFormDtoIn.getSubject());
+            return modelMapper.map(contactFormEntity, ContactFormDtoOut.class);
 
         } else
-            contactFormDao.save(modelMapper.map(contactFormDtoIn, ContactFormEntity.class));
+            throw new ContactFormNotFoundException(id);
     }
 
 
