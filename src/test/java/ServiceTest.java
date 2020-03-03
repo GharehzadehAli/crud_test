@@ -75,8 +75,5 @@ public class ServiceTest {
         }
     }
 }
-//    @Test
-//    public void testDelete(){
-//        when(repository.deleteAll()).
-//    }
+
 
