@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/crud")
+@RequestMapping("/contact-form")
 public class ContactFormController {
 
     private final ContactFormService contactFormService;
@@ -21,41 +21,41 @@ public class ContactFormController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/readAll", produces = "application/json")
+    @GetMapping(value = "", produces = "application/json")
     public List<ContactFormDtoOut> getForms() {
         return contactFormService.findAll();
 
     }
 
     @ResponseBody
-    @GetMapping(value = "/readById/{id}", produces = "application/json")
+    @GetMapping(value = "/{id}", produces = "application/json")
     public ContactFormDtoOut getFormById(@Valid @PathVariable("id") Long id) {
         return contactFormService.findById(id);
 
     }
 
     //do we need to return anything?
-    @DeleteMapping("/deleteAll")
+    @DeleteMapping("")
     public void delete() {
         contactFormService.deleteAll();
 
     }
 
     //when I made it public it turned in to yellow. why?
-    @DeleteMapping("/deleteById/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") long id) {
         contactFormService.deleteById(id);
 
     }
 
-    @PostMapping(value = "/add", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "", consumes = "application/json", produces = "application/json")
     public ContactFormDtoOut add(@Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
         return contactFormService.save(contactFormDtoIn);
 
     }
 
     //how does this validate Id?
-    @PutMapping(value = "/update/{id}", consumes = "application/json", produces = "application/json")
+    @PutMapping(value = "/{id}", consumes = "application/json", produces = "application/json")
     public ContactFormDtoOut updateById(@Valid @PathVariable("id") long id, @Valid @RequestBody ContactFormDtoIn contactFormDtoIn) {
         return contactFormService.updateById(id, contactFormDtoIn);
 

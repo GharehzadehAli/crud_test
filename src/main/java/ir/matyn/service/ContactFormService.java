@@ -71,18 +71,17 @@ public class ContactFormService {
 
 
     public ContactFormDtoOut updateById(Long id, ContactFormDtoIn contactFormDtoIn) {
-        Optional<ContactFormEntity> optContactForm = contactFormDao.findById(id);
-        if (optContactForm.isPresent()) {
-            ContactFormEntity contactFormEntity = optContactForm.get();
-            contactFormEntity.setEmail(contactFormDtoIn.getEmail());
-            contactFormEntity.setName(contactFormDtoIn.getName());
-            contactFormEntity.setMessage(contactFormDtoIn.getMessage());
-            contactFormEntity.setSubject(contactFormDtoIn.getSubject());
-            contactFormDao.save(contactFormEntity);
-            return modelMapper.map(contactFormEntity, ContactFormDtoOut.class);
 
-        } else
+        Optional<ContactFormEntity> optContactForm = contactFormDao.findById(id);
+        if (!(optContactForm.isPresent())) {
             throw new ContactFormNotFoundException(id);
+
+        }
+
+        ContactFormEntity contactFormEntity = optContactForm.get();
+        modelMapper.map(contactFormDtoIn, contactFormEntity);
+        contactFormDao.save(contactFormEntity);
+        return modelMapper.map(contactFormEntity, ContactFormDtoOut.class);
     }
 
 

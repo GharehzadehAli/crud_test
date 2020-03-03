@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 public class ContactFormEntity {
     @Id
     @GeneratedValue
-    @Column(name = "contact_form_id")
+    @Column(name = "id")
     private long id;
     @NotBlank(message = "Please Enter A Name")
     @Size(min = 3, max = 20)
@@ -32,23 +32,7 @@ public class ContactFormEntity {
     @Column(name = "message", nullable = false)
     private String message;
 
-    public ContactFormEntity() {
-    }
 
-    public ContactFormEntity(long id, String name, String email, String subject, String message) {
-        this.setId(id);
-        this.name = name;
-        this.email = email;
-        this.subject = subject;
-        this.message = message;
-    }
-
-    public ContactFormEntity(String name, String email, String subject, String message) {
-        this.name = name;
-        this.email = email;
-        this.subject = subject;
-        this.message = message;
-    }
 
 
 }

@@ -1,3 +1,4 @@
+import ir.matyn.model.dto.ContactFormDtoIn;
 import ir.matyn.model.dto.ContactFormDtoOut;
 import ir.matyn.model.entity.ContactFormEntity;
 import ir.matyn.repository.IContactFormDao;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -20,60 +22,86 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 public class ServiceTest {
 
-    List<ContactFormEntity> list;
-    ContactFormEntity contactFormEntity1;
-    ContactFormEntity contactFormEntity2;
-    ContactFormEntity contactFormEntity3;
-    ContactFormEntity contactFormEntity4;
+    List<ContactFormEntity> testCaseList;
+    ContactFormEntity testCase1 = new ContactFormEntity();
+    ContactFormEntity testCase2 = new ContactFormEntity();
+    ContactFormEntity testCase3 = new ContactFormEntity();
+    ContactFormEntity testCase4 = new ContactFormEntity();
     @Mock
-    private IContactFormDao repository;
+    private IContactFormDao contactFormDao;
     @InjectMocks
-    private ContactFormService service;
+    private ContactFormService contactFormService;
 
 
     @Before()
     public void init() {
 
         MockitoAnnotations.initMocks(this);
-        contactFormEntity1 = new ContactFormEntity(1L, "name1", "email1", "subject1", "message1");
-        contactFormEntity2 = new ContactFormEntity(2L, "name2", "email2", "subject2", "message2");
-        contactFormEntity3 = new ContactFormEntity(3L, "name3", "email3", "subject3", "message3");
-        contactFormEntity4 = new ContactFormEntity(4L, "name4", "email4", "subject4", "message4");
-        list = new ArrayList<>();
-        list.add(contactFormEntity1);
-        list.add(contactFormEntity2);
-        list.add(contactFormEntity3);
-        list.add(contactFormEntity4);
+        testCase1.setId(1L);
+        testCase2.setId(2L);
+        testCase3.setId(3L);
+        testCase4.setId(4L);
+        testCase1.setName("name1");
+        testCase2.setName("name2");
+        testCase3.setName("name3");
+        testCase4.setName("name4");
+        testCase1.setEmail("email1");
+        testCase2.setEmail("email2");
+        testCase3.setEmail("email3");
+        testCase4.setEmail("email4");
+        testCase1.setSubject("subject1");
+        testCase2.setSubject("subject2");
+        testCase3.setSubject("subject3");
+        testCase4.setSubject("subject4");
+        testCase1.setMessage("message1");
+        testCase2.setMessage("message2");
+        testCase3.setMessage("message3");
+        testCase4.setMessage("message4");
+        testCaseList = new ArrayList<>();
+        testCaseList.add(testCase1);
+        testCaseList.add(testCase2);
+        testCaseList.add(testCase3);
+        testCaseList.add(testCase4);
     }
 
     @Test
     public void findAll_Test() {
 
-        when(repository.findAll()).thenReturn(list);
-        List<ContactFormDtoOut> contactFormDtoOutList = service.findAll();
-        int i = 0;
-        for (ContactFormEntity element : repository.findAll()) {
-            assertEquals(element.getId(), contactFormDtoOutList.get(i).getId());
-            assertEquals(element.getEmail(), contactFormDtoOutList.get(i).getEmail());
-            assertEquals(element.getName(), contactFormDtoOutList.get(i).getName());
-            assertEquals(element.getMessage(), contactFormDtoOutList.get(i).getMessage());
-            assertEquals(element.getSubject(), contactFormDtoOutList.get(i).getSubject());
-            i++;
+        when(contactFormDao.findAll()).thenReturn(testCaseList);
+        List<ContactFormDtoOut> contactFormDtoOutList = contactFormService.findAll();
+        for (int i = 0; i < testCaseList.size(); i++) {
+            assertEquals(testCaseList.get(i).getId(), contactFormDtoOutList.get(i).getId());
+            assertEquals(testCaseList.get(i).getEmail(), contactFormDtoOutList.get(i).getEmail());
+            assertEquals(testCaseList.get(i).getName(), contactFormDtoOutList.get(i).getName());
+            assertEquals(testCaseList.get(i).getMessage(), contactFormDtoOutList.get(i).getMessage());
+            assertEquals(testCaseList.get(i).getSubject(), contactFormDtoOutList.get(i).getSubject());
         }
-        // Ask if verify is needed here
+
     }
 
     @Test
     public void findById_Test() {
-        for (long id = 0; id < 4; id++) {
-            when(repository.findById(id + 1)).thenReturn(Optional.of(list.get(Math.toIntExact(id))));
-            ContactFormDtoOut contactFormDtoOut = service.findById(id + 1);
-            assertEquals(list.get(Math.toIntExact(id)).getEmail(), contactFormDtoOut.getEmail());
-            assertEquals(list.get(Math.toIntExact(id)).getName(), contactFormDtoOut.getName());
-            assertEquals(list.get(Math.toIntExact(id)).getMessage(), contactFormDtoOut.getMessage());
-            assertEquals(list.get(Math.toIntExact(id)).getSubject(), contactFormDtoOut.getSubject());
-        }
+        when(contactFormDao.findById(1l)).thenReturn(Optional.of(testCase1));
+        ContactFormDtoOut contactFormDtoOut = contactFormService.findById(1);
+        assertEquals(testCase1.getEmail(), contactFormDtoOut.getEmail());
+        assertEquals(testCase1.getName(), contactFormDtoOut.getName());
+        assertEquals(testCase1.getMessage(), contactFormDtoOut.getMessage());
+        assertEquals(testCase1.getSubject(), contactFormDtoOut.getSubject());
+    }
+
+    @Test
+    public void updateById_Test() {
+        when(contactFormDao.findById(1l)).thenReturn(Optional.of(testCase1));
+        ModelMapper modelMapper = new ModelMapper();
+        ContactFormDtoIn testCaseDtoIn2 = modelMapper.map(testCase2, ContactFormDtoIn.class);
+        ContactFormDtoOut contactFormDtoOut = contactFormService.updateById(1l, testCaseDtoIn2);
+        assertEquals(testCase2.getEmail(), contactFormDtoOut.getEmail());
+        assertEquals(testCase2.getName(), contactFormDtoOut.getName());
+        assertEquals(testCase2.getMessage(), contactFormDtoOut.getMessage());
+        assertEquals(testCase2.getSubject(), contactFormDtoOut.getSubject());
     }
 }
+
+
 
 
